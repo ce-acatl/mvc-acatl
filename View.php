@@ -9,7 +9,7 @@
     public function __construct(Request $r) {
         $this->lang = $r->getLang();
         $this->error = false;
-        $this->message = array(
+        $this->message = array( //TODO: ARREGLAR ESTA ONDA
             "msg" => false, // verdadero para que aparezca en el sitio
             "iconClass" => "icon-ok-sign",
             "type" => "success"
