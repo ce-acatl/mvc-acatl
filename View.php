@@ -21,15 +21,15 @@
         
         if(!$skin){
             $routeView = VIEWSPATH.$view[0].DS.$view[1].".php";
-            $this->jsRoute = SKINSROUTE."js/";
-            $this->cssRoute = SKINSROUTE."css/";
-            $this->imgRoute = SKINSROUTE."images/";
+            $this->jsRoute = SKINSROUTE."js".DS;
+            $this->cssRoute = SKINSROUTE."css".DS;
+            $this->imgRoute = SKINSROUTE."images".DS;
             $skinPath = PUBLICPATH."layout".DS;
         } else {
             $routeView = VIEWSPATH.$skin.DS.$view[0].DS.$view[1].".php";
-            $this->jsRoute = SKINSROUTE.$skin."/js/";
-            $this->cssRoute = SKINSROUTE.$skin."/css/";
-            $this->imgRoute = SKINSROUTE.$skin."/images/";
+            $this->jsRoute = SKINSROUTE.$skin.DS."js".DS;
+            $this->cssRoute = SKINSROUTE.$skin.DS."css".DS;
+            $this->imgRoute = SKINSROUTE.$skin.DS."images".DS;
             $skinPath = SKINSPATH.$skin.DS."layout".DS;
         }
         if(is_readable($routeView) && is_readable($skinPath)){
