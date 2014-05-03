@@ -140,9 +140,9 @@
     */
     
     public static function createHTML($tag,$id = false,$class = false,$style = false, $attrArray = false){
-        $idSintax = ($id) ? "{$id}='' " : "";
-        $classSintax = ($class) ? "{$class}='' " : "";
-        $styleSintax = ($style) ? "{$style}='' " : "";
+        $idSintax = ($id) ? "id='{$id}' " : "";
+        $classSintax = ($class) ? "class='{$class}' " : "";
+        $styleSintax = ($style) ? "style='{$style}' " : "";
         if($attrArray){
             $attrSintax = "";
             foreach ($attrArray as $attr => $value){
@@ -152,6 +152,7 @@
             $attrSintax = "";
         }
         $head = "<{$tag} {$idSintax}{$classSintax}{$styleSintax}{$attrSintax}>";
+        $head = str_replace(" >", ">", $head);
         $tail = "</{$tag}>";
         $newHtml = array(
             'head' => $head,
@@ -175,7 +176,7 @@
      */
     public static function getValidationClasses($fieldName, $fieldTypeName,$necessary = false){
         $classes = array("validated");
-        if($necessary) $classes[] = "necessary";
+        if($necessary) { $classes[] = "necessary"; }
         // int = number, varchar = text, max-chars, validated, email = email, double, date_ = datepicker, text = textarea
         switch ($fieldTypeName) {
             case "int": $classes[] = "number"; break;
@@ -183,8 +184,13 @@
             case "text": $classes[] = "onlyText"; break;
             default: break;
         }
+        
         if(Tool::startsWith($fieldName,"date_")){
             $classes[] = "datepicker";            
+        } else {
+            if ($fieldName =="date_of_creation") {
+                
+            }
         }
         if(in_array($fieldTypeName,array("varchar","int"))){
             $classes[] = "max";
@@ -193,7 +199,7 @@
         $howManyClasses = count($classes);
         if($howManyClasses){
             for($i = 0;$i<=$howManyClasses-1;$i++){                
-                $readableClasses = ($howManyClasses<>$i) ? $classes[$i]." ": $classes[$i];
+                $readableClasses .= ($howManyClasses<>$i) ? $classes[$i]." ": $classes[$i];
             }
         }
         
