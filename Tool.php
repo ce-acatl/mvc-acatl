@@ -200,4 +200,21 @@
         return $readableClasses;
     }
     
+    /*
+     * Funcionize From Table
+     * Makes a String like: book_types to bookTypes
+     * And optionaly it can take suffix like: 
+     *      functionizeFromTable("book_type_id", "_id"); 
+     *      would get: bookType
+     */
+    public static function functionize($dirtyString,$removeSufix = false){
+        $string = ($removeSufix) ? substr($dirtyString,0,strlen($dirtyString)-strlen($removeSufix)) : $dirtyString;
+        $decentString = str_replace("_"," ",$string);
+        $capitalizedString = ucwords($decentString);
+        $nonSpacedString = str_replace(" ","",$capitalizedString);
+        $firstLetterLoweredCase = lcfirst($nonSpacedString);
+        $niceFunctionName = $firstLetterLoweredCase;
+        return $niceFunctionName;
+    }
+    
 }
