@@ -82,6 +82,12 @@
         }
     }
     
+    protected function error($message){
+        include_once '404.html';
+        echo '<br />';
+        echo $message;
+    }
+    
     
     /* CLEAN ARRAY
     *  Convierte datos HTML y los caracteres especiales a un código más seguro.
@@ -195,34 +201,6 @@
         }
         
         return true;
-    }
-    
-    /* Create HTML
-     * Funcion para construir etiquetas HTML [03-04-2014]
-     * con un tag se puede construir, pero se puede incluir class, id, style (en formato css) y un arreglo de atributos
-     * regresa un arreglo con las propiedades: head y tail para poder insertar contenido
-    */
-    
-    public function createHTML($tag,$id = false,$class = false,$style = false, $attrArray = false){
-        $idSintax = ($id) ? "{$id}='' " : "";
-        $classSintax = ($class) ? "{$class}='' " : "";
-        $styleSintax = ($style) ? "{$style}='' " : "";
-        if($attrArray){
-            $attrSintax = "";
-            foreach ($attrArray as $attr => $value){
-                $attrSintax .= "{$attr}='{$value}' ";
-            }
-        } else {
-            $attrSintax = "";
-        }
-        $head = "<{$tag} {$idSintax}{$classSintax}{$styleSintax}{$attrSintax}>";
-        $tail = "</{$tag}>";
-        $newHtml = array(
-            'head' => $head,
-            'tail' => $tail
-        );
-        
-        return $newHtml;
     }
     
 }

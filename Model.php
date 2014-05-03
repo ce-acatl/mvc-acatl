@@ -6,17 +6,16 @@
     }
     
     /* LOAD MODEL
-    *  Carga el modelo, necesita el nombre del modelo, si el espacio esta vacio se cargan los modelos del folder default
+    *  Carga el modelo, necesita el nombre del modelo, si el espacio esta vacio se cargan los modelos del folder de raiz de los modelos
     *  Ex:  $model = "something"
     *       $space = "admin"
     *       y un archivo llamado somethingModel.php en la carpeta correspondiente al espacio
     */ 
-    public function loadModel($model,$space = false){
+    protected function loadModel($model,$space = false){
         $modelName = $model."Model";
-        if(!$space){
-           $space = "default"; 
-        }  
-        $modelRoute = ROOT."private".DS."models".DS.$space.DS.$modelName.".php";
+        $modelRoute = (!$space)?
+                ROOT."private".DS."models".DS.$modelName.".php"
+                : ROOT."private".DS."models".DS.$space.DS.$modelName.".php";
         
         if(is_readable($modelRoute)){
             require_once $modelRoute;
@@ -35,13 +34,35 @@
         return $data[$param];
     }
     
-    public function getEmpty(){
+    public function getEmpty($onlyNames = true){
         $sql = "SHOW COLUMNS FROM {$this->table}";
         $sth = $this->db->select($sql);
         $columns = $sth->fetchAll(2);
         $empty = array();
         foreach ($columns as $column){
-            $empty[$column['Field']] = '';
+            if($onlyNames){
+                $empty[$column['Field']] = ''; // Get only name
+            } else {
+                $empty[] = $column;  
+            }
+        }
+        return $empty;
+    }
+    
+    public function checkIfValid($necesaryFields, $actualFields){
+        $isValid = array();
+        foreach($necesaryFields as $field):
+            if(key_exists($field, $actualFields)){
+                $isValid[] = true;
+            } else {
+                $isValid[] = false;
+            }
+        endforeach;
+        
+        if(in_array(false, $isValid)){
+            return false;
+        } else {
+            return true;
         }
     }
     

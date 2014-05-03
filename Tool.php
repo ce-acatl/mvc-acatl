@@ -115,4 +115,89 @@
         else { return $new_string8; }
     }
     
+    /*
+     * Starts With
+     * returns true or false
+     * Thanks: http://stackoverflow.com/questions/834303/startswith-and-endswith-functions-in-php @Salman A
+     */
+    public static function startsWith($haystack, $needle) {
+        return $needle === "" || strpos($haystack, $needle) === 0;
+    }
+    
+    /*
+     * Ends With
+     * returns true or false
+     * Thanks: http://stackoverflow.com/questions/834303/startswith-and-endswith-functions-in-php @Salman A
+     */
+    public static function endsWith($haystack, $needle){
+        return $needle === "" || substr($haystack, -strlen($needle)) === $needle;
+    }
+    
+    /* Create HTML
+     * Funcion para construir etiquetas HTML [03-04-2014]
+     * con un tag se puede construir, pero se puede incluir class, id, style (en formato css) y un arreglo de atributos
+     * regresa un arreglo con las propiedades: head y tail para poder insertar contenido
+    */
+    
+    public static function createHTML($tag,$id = false,$class = false,$style = false, $attrArray = false){
+        $idSintax = ($id) ? "{$id}='' " : "";
+        $classSintax = ($class) ? "{$class}='' " : "";
+        $styleSintax = ($style) ? "{$style}='' " : "";
+        if($attrArray){
+            $attrSintax = "";
+            foreach ($attrArray as $attr => $value){
+                $attrSintax .= "{$attr}='{$value}' ";
+            }
+        } else {
+            $attrSintax = "";
+        }
+        $head = "<{$tag} {$idSintax}{$classSintax}{$styleSintax}{$attrSintax}>";
+        $tail = "</{$tag}>";
+        $newHtml = array(
+            'head' => $head,
+            'tail' => $tail
+        );
+        
+        return $newHtml;
+    }
+    
+    public static function getMaxOfField($type){
+        $pos = strpos($type, "("); // Busca la posición del primer parentesis
+        $typeMax = substr($type, $pos-1);
+        $almostMax = str_replace("(","",$typeMax);
+        $max = str_replace(")","",$almostMax);
+        return (int) $max;
+    }
+    
+    /*
+     * Get Validation Classes
+     * Obtiene las classes necesarias para la validación del formulario, en conjunto del plugin validace.js 
+     */
+    public static function getValidationClasses($fieldName, $fieldTypeName,$necessary = false){
+        $classes = array("validated");
+        if($necessary) $classes[] = "necessary";
+        // int = number, varchar = text, max-chars, validated, email = email, double, date_ = datepicker, text = textarea
+        switch ($fieldTypeName) {
+            case "int": $classes[] = "number"; break;
+            case "varchar": $classes[] = "alphanumeric"; break;
+            case "text": $classes[] = "onlyText"; break;
+            default: break;
+        }
+        if(Tool::startsWith($fieldName,"date_")){
+            $classes[] = "datepicker";            
+        }
+        if(in_array($fieldTypeName,array("varchar","int"))){
+            $classes[] = "max";
+        }
+        $readableClasses = "";
+        $howManyClasses = count($classes);
+        if($howManyClasses){
+            for($i = 0;$i<=$howManyClasses-1;$i++){                
+                $readableClasses = ($howManyClasses<>$i) ? $classes[$i]." ": $classes[$i];
+            }
+        }
+        
+        return $readableClasses;
+    }
+    
 }
