@@ -207,20 +207,67 @@
     }
     
     /*
-     * Funcionize From Table
+     * Funcionize 
      * Makes a String like: book_types to bookTypes
      * And optionaly it can take suffix like: 
      *      functionizeFromTable("book_type_id", "_id"); 
      *      would get: bookType
      */
     public static function functionize($dirtyString,$removeSufix = false){
-        $string = ($removeSufix) ? substr($dirtyString,0,strlen($dirtyString)-strlen($removeSufix)) : $dirtyString;
+        $string = ($removeSufix) ? Tool::substractSuffix($dirtyString,$removeSufix) : $dirtyString;
         $decentString = str_replace("_"," ",$string);
         $capitalizedString = ucwords($decentString);
         $nonSpacedString = str_replace(" ","",$capitalizedString);
         $firstLetterLoweredCase = lcfirst($nonSpacedString);
         $niceFunctionName = $firstLetterLoweredCase;
         return $niceFunctionName;
+    }
+    
+    /*
+     * Slugify
+     * Makes a String like: Júan Carlos to juan-carlos
+     * And optionaly it can take suffix like: 
+     *      functionizeFromTable("book_type_id", "_id"); 
+     *      would get: book-type
+     */
+    public static function slugify($dirtyString, $separator = "-", $removeSufix = false){
+        // Cambiar caracteres especiales
+        $special_cases = array( '&' => 'and');
+        $string = str_replace(array_keys($special_cases), array_values($special_cases), $dirtyString);
+        // Quitar caracteres raros
+        $normalString = Tool::sluggable($string);
+        // De mayuscula a minuscula
+        $loweredString = strtolower($normalString);
+        // Si hay sufijo removerlo
+        $goodString = ($removeSufix) ? Tool::substractSuffix($loweredString,$removeSufix) : $loweredString;
+        // Espacios a separador
+        $slug = str_replace(" ",$separator,$goodString);
+        
+        return $slug;
+    }
+    
+    public static function sluggable($p) {
+        $ts = array("/[À-Å]/","/Æ/","/Ç/","/[È-Ë]/","/[Ì-Ï]/","/Ð/","/Ñ/","/[Ò-ÖØ]/","/×/","/[Ù-Ü]/","/[Ý-ß]/","/[à-å]/","/æ/","/ç/","/[è-ë]/","/[ì-ï]/","/ð/","/ñ/","/[ò-öø]/","/÷/","/[ù-ü]/","/[ý-ÿ]/");
+        $tn = array("A","AE","C","E","I","D","N","O","X","U","Y","a","ae","c","e","i","d","n","o","x","u","y");
+        return preg_replace($ts,$tn, $p);
+    }
+    
+    /*
+     * Substract Suffix
+     * Devuelve string sin la última palabra coincidente del string
+     */
+    public static function substractSuffix($dirtyString, $word){
+        $string = substr($dirtyString,0,strlen($dirtyString)-strlen($word));
+        return $string;
+    }
+    
+    /*
+     * Substract Prefix
+     * Devuelve string sin la primera palabra coincidente del string
+     */
+    public static function substractPrefix($dirtyString, $word){
+        $string = substr($dirtyString,-0,strlen($word));
+        return $string;
     }
     
 }
