@@ -28,27 +28,30 @@
 		echo $text;
 	}
     }
-    public function formatMoney($int) {
+    public static function formatMoney($int) {
         $result = number_format($int);
         return $result;
     }
-    public function capitalize($text) {
-        $newText = strtoupper($text);
+    public static function capitalize($text, $first = false) {
+        if($first){
+            $newText = ucfirst($text);
+        } else { // All
+            $newText = ucwords($text);
+            //$newText = strtoupper($text);
+        }
+        
         return $newText;
     }
-    public function capitalizeFirst($text) {
-        $newText = ucfirst($text);
-        return $newText;
-    }
-    public function replaceUnder($string) {
-        $newString = str_replace("_"," ",$string);
+    public static function replace($string,$something = "_",$with = " ") {
+        $newString = str_replace($something, $with, $string);
         return $newString;
     }
-    public function replaceSpace($string) {
-        $newString = str_replace(" ","_",$string);
-        return $newString;
+    public static function title($tableName,$separator = "_"){
+        $normalSentence = Tool::replace($tableName,$separator," ");
+        $title = Tool::capitalize($normalSentence);
+        return $title;
     }
-    public function makeUrl($string) {
+    public static function makeUrl($string) {
         $borrar = array("!", ",", ".", ":", "'", "=");
         $remplazar = array(
             " "=>"-",
@@ -71,7 +74,7 @@
         //$newString4 = str_replace ("", "", $newString3);
         return $cleanStr;
     }    
-    public function cleanText($text) {
+    public static function cleanText($text) {
         $t = htmlspecialchars_decode($text, ENT_NOQUOTES);
         $output = str_replace('\&quot;', '&quot;', $t);
         $output2 = str_replace("\&#039;", "&#039;", $output);
@@ -268,6 +271,15 @@
     public static function substractPrefix($dirtyString, $word){
         $string = substr($dirtyString,-0,strlen($word));
         return $string;
+    }
+    
+    public static function createDirectoryIfNotExist($path){
+        $return = 0;
+        if (!is_dir($path)){ 
+            mkdir($path); 
+            $return = 1;
+        } 
+        return $return;
     }
     
 }
