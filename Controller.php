@@ -49,17 +49,6 @@
         endif;
     }
     
-    /* IS AJAX
-    *  Devuelve FALSE si no es un Request via ajax o TRUE si es.
-    */ 
-    protected function requestIsAjax(){
-        if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-    
     /* LOAD MODEL
     *  Carga el modelo, necesita el nombre del modelo, si el espacio esta vacio se cargan los modelos del folder de raiz de los modelos
     *  Ex:  $model = "something"
@@ -82,8 +71,8 @@
         }
     }
     
-    protected function error($message){
-        include_once '404.html';
+    protected function error($message, $type = 404){
+        include_once $type.'.html';
         echo '<br />';
         echo $message;
     }
@@ -96,7 +85,8 @@
     protected function cleanArray($dirty){
         $clean = array();
         foreach ($dirty as $key => $value){
-            $clean[$key] = htmlentities(utf8_decode(htmlspecialchars($value)));
+            //$clean[$key] = htmlentities(utf8_decode(htmlspecialchars($value)));
+            $clean[$key] = Text::cleanForSql($value);
         }
         return $clean;
     }

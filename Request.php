@@ -5,6 +5,9 @@
     private $method;
     private $args;
     private $lang;
+    public $url;
+    public $host;
+    public $afterPath;
     
     /* Class Request
      * Se corre automáticamente cuando corre la aplicación, para dividir la URL en:
@@ -16,9 +19,13 @@
      */
 
     public function __construct() {
+        $this->host = $_SERVER["HTTP_HOST"]; // gets host
+        $this->afterPath = $_SERVER["REQUEST_URI"]; // gets path after url
+        
         if (!isset($_GET["url"])) {
             if (LANG_MODE) {
-                header("Location: ".URL.ANCLE.DEFAULT_LANG."/");
+                //URL.ANCLE.DEFAULT_LANG
+            header("Location: {$this->url}/");
             }
         } else {
             $url0 = filter_input(INPUT_GET, "url"); // Se limpia la url
@@ -64,6 +71,28 @@
 
     public function getLang() {
         return $this->lang;
+    }
+    
+    /*
+     * Get Url
+     * Obtiene la url, por default: http://www.thissite.com
+     * primer parametro full, para obtener tambien los metodos y parametros completos de la url
+     * segundo parametro secure, para 
+     */
+    public static function getUrl($full = false, $secure = false){
+        $this->url = ($full) ? $this->host.$this->afterPath : $this->host;
+        return ($secure) ? "https://".$this->url : "http://".$this->url;        
+    }
+    
+    /* IS AJAX
+    *  Devuelve FALSE si no es un Request via ajax o TRUE si es.
+    */ 
+    public static function isAjax(){
+        if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
 }
